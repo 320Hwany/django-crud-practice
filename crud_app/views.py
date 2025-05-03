@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from crud_app.dependency_container import container
-from crud_app.dtos.dtos import MemberCreateRequest
+from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse
 
 logger = logging.getLogger(__name__)
 
@@ -30,10 +30,20 @@ class MemberView(APIView):
 
     @handle_exception
     def post(self, request: Request) -> Response:
-        member_create_request = MemberCreateRequest(
+        member_create_request: MemberCreateRequest = MemberCreateRequest(
             name=request.data.get("name", ""),
             email=request.data.get("email", ""),
             age=request.data.get("age", 0),
         )
         self.member_service.create_member(member_create_request)
         return Response("OK", status=201)
+
+class MemberListView(APIView):
+
+    def __init__(self, **kwargs: Any):
+        super().__init__(**kwargs)
+        self.member_service = container.member_service
+
+    def get(self, request: Request, member_id: int) -> Response:
+        memberResponse: MemberResponse = self.member_service.get_member(member_id)
+        return Response(memberResponse.__dict__, status=200)

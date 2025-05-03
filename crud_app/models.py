@@ -1,6 +1,5 @@
 from django.db import models
 
-from crud_app.dtos.dtos import MemberCreateRequest
 from crud_app.entities.entities import OrderEntity
 
 
@@ -15,14 +14,6 @@ class Member(models.Model):
 
     class Meta:
         db_table = 'members'
-
-    @classmethod
-    def from_create_request(cls, dto: MemberCreateRequest) -> 'Member':
-        return cls(
-            name=dto.name,
-            email=dto.email,
-            age=dto.age,
-        )
 
 
 class Order(models.Model):

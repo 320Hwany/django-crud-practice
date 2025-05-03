@@ -5,15 +5,11 @@ from crud_app.models import Member
 class MemberRepository:
 
     def create_member(self, dto: MemberCreateRequest) -> None:
-        member = Member.from_create_request(dto)
+        member = dto.to_model()
         member.save()
 
     def get_member(self, member_id):
-        """
-        Retrieve a member by ID.
-        """
-        # Implementation for retrieving a member
-        pass
+        return Member.objects.get(member_id=member_id)
 
     def update_member(self, member_id, member_data):
         """
