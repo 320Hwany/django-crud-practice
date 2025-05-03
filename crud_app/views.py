@@ -10,12 +10,25 @@ from crud_app.dtos.dtos import MemberCreateRequest
 
 logger = logging.getLogger(__name__)
 
+def handle_exception(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError as e:
+            return Response({"message": str(e)}, status=400)
+        except Exception as e:
+            logger.error(f"An error occurred: {e}")
+            return Response({"message": "An error occurred"}, status=500)
+    return wrapper
+
+
 class MemberView(APIView):
 
     def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
         self.member_service = container.member_service
 
+    @handle_exception
     def post(self, request: Request) -> Response:
         member_create_request = MemberCreateRequest(
             name=request.data.get("name", ""),
