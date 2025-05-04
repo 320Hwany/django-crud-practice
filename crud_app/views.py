@@ -31,11 +31,7 @@ class MemberView(APIView):
 
     @handle_exception
     def post(self, request: Request) -> Response:
-        member_create_request: MemberCreateRequest = MemberCreateRequest(
-            name=request.data.get("name", ""),
-            email=request.data.get("email", ""),
-            age=request.data.get("age", 0),
-        )
+        member_create_request: MemberCreateRequest = MemberCreateRequest(**request.data)
         self.member_service.create_member(member_create_request)
         return Response("OK", status=201)
 
@@ -50,10 +46,6 @@ class MemberListView(APIView):
         return Response(asdict(member_response), status=200)
 
     def patch(self, request: Request, member_id: int) -> Response:
-        member_update_request: MemberUpdateRequest = MemberUpdateRequest(
-            name=request.data.get("name", ""),
-            email=request.data.get("email", ""),
-            age=request.data.get("age", 0),
-        )
+        member_update_request: MemberUpdateRequest = MemberUpdateRequest(**request.data)
         self.member_service.update_member(member_id, member_update_request)
         return Response("OK", status=200)
