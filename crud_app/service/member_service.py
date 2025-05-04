@@ -17,3 +17,6 @@ class MemberService:
 
     def update_member(self, member_id: int, dto: MemberUpdateRequest) -> None:
         self.member_repository.update_member(member_id, dto)
+
+    def delete_member(self, member_id: int) -> None:
+        self.member_repository.delete_member(member_id)

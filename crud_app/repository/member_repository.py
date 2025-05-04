@@ -11,17 +11,23 @@ class MemberRepository:
         member.save()
 
     def get_member(self, member_id):
-        return Member.objects.get(member_id=member_id)
+        try :
+            return Member.objects.get(member_id=member_id)
+        except Member.DoesNotExist:
+            raise ValueError(f"회원 id가 {member_id}인 회원이 존재하지 않습니다.")
 
     def update_member(self, member_id: int, dto: MemberUpdateRequest) -> None:
-        member = Member.objects.get(member_id=member_id)
-        for field, value in asdict(dto).items():
-            setattr(member, field, value)
-        member.save()
+        try:
+            member = Member.objects.get(member_id=member_id)
+            for field, value in asdict(dto).items():
+                setattr(member, field, value)
+            member.save()
+        except Member.DoesNotExist:
+            raise ValueError(f"회원 id가 {member_id}인 회원이 존재하지 않아 수정할 수 없습니다.")
 
-    def delete_member(self, member_id):
-        """
-        Delete a member from the database.
-        """
-        # Implementation for deleting a member
-        pass
+    def delete_member(self, member_id) -> None:
+        try:
+            member = Member.objects.get(member_id=member_id)
+            member.delete()
+        except Member.DoesNotExist:
+            raise ValueError(f"회원 id가 {member_id}인 회원이 존재하지 않아 삭제할 수 없습니다.")

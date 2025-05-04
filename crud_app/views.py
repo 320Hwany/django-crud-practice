@@ -41,11 +41,18 @@ class MemberListView(APIView):
         super().__init__(**kwargs)
         self.member_service = container.member_service
 
+    @handle_exception
     def get(self, request: Request, member_id: int) -> Response:
         member_response: MemberResponse = self.member_service.get_member(member_id)
         return Response(asdict(member_response), status=200)
 
+    @handle_exception
     def patch(self, request: Request, member_id: int) -> Response:
         member_update_request: MemberUpdateRequest = MemberUpdateRequest(**request.data)
         self.member_service.update_member(member_id, member_update_request)
+        return Response("OK", status=200)
+
+    @handle_exception
+    def delete(self, request: Request, member_id: int) -> Response:
+        self.member_service.delete_member(member_id)
         return Response("OK", status=200)
