@@ -1,4 +1,5 @@
 import logging
+from dataclasses import asdict
 from typing import Any
 
 from rest_framework.request import Request
@@ -45,5 +46,5 @@ class MemberListView(APIView):
         self.member_service = container.member_service
 
     def get(self, request: Request, member_id: int) -> Response:
-        memberResponse: MemberResponse = self.member_service.get_member(member_id)
-        return Response(memberResponse.__dict__, status=200)
+        member_response: MemberResponse = self.member_service.get_member(member_id)
+        return Response(asdict(member_response), status=200)
