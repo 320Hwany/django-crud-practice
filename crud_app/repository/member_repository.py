@@ -9,9 +9,10 @@ from crud_app.models import Member
 class MemberRepository:
 
     @transaction.atomic
-    def create_member(self, dto: MemberCreateRequest) -> None:
+    def create_member(self, dto: MemberCreateRequest) -> Member:
         member = dto.to_model()
         member.save()
+        return member
 
     @transaction.atomic
     def get_member(self, member_id):
