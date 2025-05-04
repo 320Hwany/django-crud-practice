@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from crud_app.dependency_container import container
-from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse
+from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse, MemberUpdateRequest
 
 logger = logging.getLogger(__name__)
 
@@ -48,3 +48,12 @@ class MemberListView(APIView):
     def get(self, request: Request, member_id: int) -> Response:
         member_response: MemberResponse = self.member_service.get_member(member_id)
         return Response(asdict(member_response), status=200)
+
+    def patch(self, request: Request, member_id: int) -> Response:
+        member_update_request: MemberUpdateRequest = MemberUpdateRequest(
+            name=request.data.get("name", ""),
+            email=request.data.get("email", ""),
+            age=request.data.get("age", 0),
+        )
+        self.member_service.update_member(member_id, member_update_request)
+        return Response("OK", status=200)

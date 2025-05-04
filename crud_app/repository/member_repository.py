@@ -1,4 +1,6 @@
-from crud_app.dtos.dtos import MemberCreateRequest
+from dataclasses import asdict
+
+from crud_app.dtos.dtos import MemberCreateRequest, MemberUpdateRequest
 from crud_app.models import Member
 
 
@@ -11,12 +13,11 @@ class MemberRepository:
     def get_member(self, member_id):
         return Member.objects.get(member_id=member_id)
 
-    def update_member(self, member_id, member_data):
-        """
-        Update an existing member's information.
-        """
-        # Implementation for updating a member
-        pass
+    def update_member(self, member_id: int, dto: MemberUpdateRequest) -> None:
+        member = Member.objects.get(member_id=member_id)
+        for field, value in asdict(dto).items():
+            setattr(member, field, value)
+        member.save()
 
     def delete_member(self, member_id):
         """

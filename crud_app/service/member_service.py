@@ -1,4 +1,4 @@
-from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse
+from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse, MemberUpdateRequest
 from crud_app.models import Member
 from crud_app.repository.member_repository import MemberRepository
 
@@ -14,3 +14,6 @@ class MemberService:
     def get_member(self, member_id: int) -> MemberResponse:
         member: Member = self.member_repository.get_member(member_id)
         return MemberResponse.from_model(member)
+
+    def update_member(self, member_id: int, dto: MemberUpdateRequest) -> None:
+        self.member_repository.update_member(member_id, dto)

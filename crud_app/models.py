@@ -1,6 +1,5 @@
 from django.db import models
 
-from crud_app.entities.entities import OrderEntity
 
 
 class Member(models.Model):
@@ -15,6 +14,12 @@ class Member(models.Model):
     class Meta:
         db_table = 'members'
 
+    def update_member(self, name: str, email: str, age: int) -> None:
+        self.name = name
+        self.email = email
+        self.age = age
+        self.save()
+
 
 class Order(models.Model):
     order_id: models.BigAutoField = models.BigAutoField(primary_key=True)
@@ -26,13 +31,3 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'orders'
-
-    @classmethod
-    def from_entity(cls, entity: OrderEntity) -> 'Order':
-        return cls(
-            order_id=entity.order_id,
-            member_id=entity.member_id,
-            price=entity.price,
-            created_at=entity.created_at,
-            updated_at=entity.updated_at,
-        )
