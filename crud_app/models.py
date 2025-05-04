@@ -14,12 +14,6 @@ class Member(models.Model):
     class Meta:
         db_table = 'members'
 
-    def update_member(self, name: str, email: str, age: int) -> None:
-        self.name = name
-        self.email = email
-        self.age = age
-        self.save()
-
 
 class Order(models.Model):
     order_id: models.BigAutoField = models.BigAutoField(primary_key=True)
