@@ -37,8 +37,10 @@ class MemberRepository:
             access_token: str = jwt.encode(access_payload, secret_key, algorithm="HS256")
             refresh_token: str = jwt.encode(refresh_payload, secret_key, algorithm="HS256")
 
-            jwt_refresh_token: JwtRefreshToken = JwtRefreshToken(member_id=member.member_id, refresh_token=refresh_token)
-            jwt_refresh_token.save()
+            JwtRefreshToken.objects.update_or_create(
+                member_id=member.member_id,
+                defaults={"refresh_token": refresh_token}
+            )
 
             return JwtToken(access_token=access_token, refresh_token=refresh_token)
 
