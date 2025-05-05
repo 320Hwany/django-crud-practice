@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from crud_app.dependency_container import container
-from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse, MemberUpdateRequest
+from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse, MemberUpdateRequest, MemberLoginRequest
 
 logger = logging.getLogger(__name__)
 
@@ -56,3 +56,15 @@ class MemberListView(APIView):
     def delete(self, request: Request, member_id: int) -> Response:
         self.member_service.delete_member(member_id)
         return Response("OK", status=200)
+
+class MemberLoginView(APIView):
+
+    def __init__(self, **kwargs: Any):
+        super().__init__(**kwargs)
+        self.member_service = container.member_service
+
+    @handle_exception
+    def post(self, request: Request) -> Response:
+        member_login_request: MemberLoginRequest = MemberLoginRequest(**request.data)
+        member_response = self.member_service.login(member_login_request, request.session)
+        return Response(asdict(member_response), status=200)

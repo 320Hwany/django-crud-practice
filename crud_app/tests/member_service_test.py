@@ -13,6 +13,7 @@ def test_create_member():
     dto = MemberCreateRequest(
         name="test name",
         email="test@gmail.com",
+        password="test password",
         age=20,
     )
 
@@ -30,6 +31,7 @@ def test_get_member():
     dto = MemberCreateRequest(
         name="test name",
         email="test@gmail.com",
+        password="test password",
         age=20,
     )
     member: Member = member_repository.create_member(dto)
@@ -49,6 +51,7 @@ def test_update_member():
     dto = MemberCreateRequest(
         name="test name",
         email="test@gmail.com",
+        password="test password",
         age=20,
     )
     member: Member = member_repository.create_member(dto)
@@ -56,6 +59,7 @@ def test_update_member():
     member_update_request = MemberUpdateRequest(
         name="test update name",
         email="test_update@gmail.com",
+        password="test update password",
         age=25,
     )
 
@@ -77,6 +81,7 @@ def test_delete_member():
     dto = MemberCreateRequest(
         name="test name",
         email="test@gmail.com",
+        password="test password",
         age=20,
     )
     member: Member = member_repository.create_member(dto)
