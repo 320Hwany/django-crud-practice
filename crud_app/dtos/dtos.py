@@ -78,3 +78,8 @@ class MemberResponse:
             email=member.email,
             age=member.age
         )
+
+@dataclass(kw_only=True, eq=True, frozen=True)
+class JwtToken:
+    access_token: str
+    refresh_token: str

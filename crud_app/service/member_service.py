@@ -1,7 +1,4 @@
-from django.contrib.sessions.backends.base import SessionBase
-from rest_framework import request
-
-from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse, MemberUpdateRequest, MemberLoginRequest
+from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse, MemberUpdateRequest, MemberLoginRequest, JwtToken
 from crud_app.models import Member
 from crud_app.repository.member_repository import MemberRepository
 
@@ -14,9 +11,8 @@ class MemberService:
     def create_member(self, dto: MemberCreateRequest) -> None:
         self.member_repository.create_member(dto)
 
-    def login(self, dto: MemberLoginRequest, session: SessionBase) -> MemberResponse:
-        member: Member = self.member_repository.login(dto, session)
-        return MemberResponse.from_model(member)
+    def login(self, dto: MemberLoginRequest) -> JwtToken:
+        return self.member_repository.login(dto)
 
     def get_member(self, member_id: int) -> MemberResponse:
         member: Member = self.member_repository.get_member(member_id)

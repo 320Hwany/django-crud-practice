@@ -26,3 +26,15 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'orders'
+
+
+class JwtRefreshToken(models.Model):
+    jwt_refresh_token_id: models.BigAutoField = models.BigAutoField(primary_key=True)
+    member_id: models.BigIntegerField = models.BigIntegerField()
+    refresh_token: models.CharField = models.CharField(max_length=500)
+    created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'jwt_refresh_token'
+

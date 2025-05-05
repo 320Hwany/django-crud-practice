@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from crud_app.dependency_container import container
-from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse, MemberUpdateRequest, MemberLoginRequest
+from crud_app.dtos.dtos import MemberCreateRequest, MemberResponse, MemberUpdateRequest, MemberLoginRequest, JwtToken
 
 logger = logging.getLogger(__name__)
 
@@ -66,5 +66,5 @@ class MemberLoginView(APIView):
     @handle_exception
     def post(self, request: Request) -> Response:
         member_login_request: MemberLoginRequest = MemberLoginRequest(**request.data)
-        member_response = self.member_service.login(member_login_request, request.session)
-        return Response(asdict(member_response), status=200)
+        jwt_token: JwtToken = self.member_service.login(member_login_request)
+        return Response(asdict(jwt_token), status=200)
