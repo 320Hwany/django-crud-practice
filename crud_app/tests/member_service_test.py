@@ -1,7 +1,7 @@
 import pytest
 
-from crud_app.dtos.dtos import MemberCreateRequest, MemberUpdateRequest
-from crud_app.models import Member
+from crud_app.dtos.dtos import MemberCreateRequest, MemberUpdateRequest, MemberLoginRequest, JwtToken
+from crud_app.models import Member, JwtRefreshToken
 from crud_app.service.member_service import MemberService
 from crud_app.repository.member_repository import MemberRepository
 
@@ -22,6 +22,49 @@ def test_create_member():
 
     # then
     assert Member.objects.filter().count() == 1
+
+@pytest.mark.django_db
+def test_login():
+    # given
+    member_repository = MemberRepository()
+    member_service = MemberService(member_repository=member_repository)
+    dto = MemberCreateRequest(
+        name="test name",
+        email="test@gmail.com",
+        password="test password",
+        age=20,
+    )
+    member: Member = member_repository.create_member(dto)
+
+    member_login_request: MemberLoginRequest = MemberLoginRequest(email="test@gmail.com", password="test password", )
+
+    # when
+    jwt_token: JwtToken = member_service.login(member_login_request)
+
+    # then
+    assert jwt_token.access_token is not None
+    assert jwt_token.refresh_token is not None
+
+@pytest.mark.django_db
+def test_create_token():
+    # given
+    member_repository = MemberRepository()
+    member_service = MemberService(member_repository=member_repository)
+    dto = MemberCreateRequest(
+        name="test name",
+        email="test@gmail.com",
+        password="test password",
+        age=20,
+    )
+
+    member_repository.create_member(dto)
+    member_login_request: MemberLoginRequest = MemberLoginRequest(email="test@gmail.com", password="test password", )
+
+    # when
+    member_service.login(member_login_request)
+
+    # then
+    assert JwtRefreshToken.objects.filter().count() == 1
 
 @pytest.mark.django_db
 def test_get_member():
