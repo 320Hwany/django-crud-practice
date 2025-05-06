@@ -1,5 +1,6 @@
 import logging
 from dataclasses import asdict
+from datetime import datetime, timedelta
 from functools import wraps
 from typing import Any
 
@@ -44,6 +45,19 @@ def authentication(func):
             try:
                 refresh_payload = jwt.decode(refresh_token, secret_key, algorithms=[algorithm])
                 member_id = refresh_payload.get("member_id")
+                member_response: MemberResponse = self.member_service.get_member(member_id)
+
+                access_payload = {
+                    "member_id": member_response.member_id,
+                    "name": member_response.name,
+                    "email": member_response.email,
+                    "age": member_response.age,
+                    "exp": datetime.utcnow() + timedelta(hours=1)  # access_token 만료 시간 (1시간)
+                }
+
+                access_token: str = jwt.encode(access_payload, secret_key, algorithm=[algorithm])
+                request.headers.__setattr__("AccessToken", access_token)
+
             except jwt.ExpiredSignatureError:
                 raise AuthenticationFailed("Refresh token has expired")
             except jwt.InvalidTokenError:
